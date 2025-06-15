@@ -8,3 +8,5 @@ server/.env
 .idea
 .jetclient\Products
 .jetclient
+
+package-lock.json
