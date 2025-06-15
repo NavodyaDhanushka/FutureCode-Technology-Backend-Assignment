@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+server/.env
+server/.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Optional: Ignore database dump files or temp files
+*.sql
+*.sqlite
+*.tmp
+
+# Optional: VSCode settings (if using)
+.vscode/
+
+.idea
+.gitignore
+.jetclient
