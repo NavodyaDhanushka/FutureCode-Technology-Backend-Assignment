@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const ProductManager = () => {
+    const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [form, setForm] = useState({ name: "", quantity: "", price: "" });
     const [searchTerm, setSearchTerm] = useState("");
@@ -33,8 +35,16 @@ const ProductManager = () => {
             Swal.fire("Quantity and Price cannot be negative", "", "error");
             return false;
         }
+        const duplicate = products.find(
+            (p) => p.name.trim().toLowerCase() === form.name.trim().toLowerCase()
+        );
+        if (duplicate) {
+            Swal.fire("Product name already exists", "", "error");
+            return false;
+        }
         return true;
     };
+
 
     const addProduct = async () => {
         if (!validateInputs()) return;
@@ -129,6 +139,21 @@ const ProductManager = () => {
         }
     };
 
+    const handleLogout = async () => {
+        const result = await Swal.fire({
+            title: "Are you sure you want to logout?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Logout",
+            cancelButtonText: "Cancel",
+        });
+
+        if (result.isConfirmed) {
+            navigate("/");
+            Swal.fire("Logged out", "", "success");
+        }
+    };
+
     const filteredProducts = products.filter((p) =>
         p.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -140,9 +165,11 @@ const ProductManager = () => {
 
     return (
         <div style={styles.container}>
-            <h2 style={styles.heading}>Product Management</h2>
+            <div style={styles.headerRow}>
+                <h2 style={styles.heading}>Product Management</h2>
+                <button style={styles.logoutButton} onClick={handleLogout}>Logout</button>
+            </div>
 
-            {/* Add Product Section */}
             <div style={styles.card}>
                 <h3 style={styles.subHeading}>Add New Product</h3>
                 <div style={styles.inputRow}>
@@ -187,7 +214,6 @@ const ProductManager = () => {
                 </div>
             </div>
 
-            {/* Search Bar */}
             <input
                 type="text"
                 placeholder="Search products..."
@@ -203,7 +229,7 @@ const ProductManager = () => {
                 }}
             />
 
-            {/* Products Table */}
+
             <div style={styles.card}>
                 <div style={styles.tableHeader}>
                     <h3 style={styles.subHeading}>Products List</h3>
@@ -212,62 +238,51 @@ const ProductManager = () => {
                         {filteredProducts.length !== 1 ? "s" : ""}
                     </p>
                 </div>
-                <table style={styles.table}>
-                    <thead>
-                    <tr>
-                        <th style={styles.th}>PRODUCT NAME</th>
-                        <th style={styles.th}>QUANTITY</th>
-                        <th style={styles.th}>PRICE</th>
-                        <th style={styles.th}>TOTAL VALUE</th>
-                        <th style={styles.th}>ACTIONS</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {filteredProducts.map((p, idx) => {
-                        const price = Number(p.price);
-                        const quantity = Number(p.quantity);
-                        const total = price * quantity;
 
-                        return (
-                            <tr key={idx}>
-                                <td style={styles.td}>{p.name}</td>
-                                <td style={styles.td}>{quantity}</td>
-                                <td style={styles.td}>LKR {price.toFixed(2)}</td>
-                                <td style={styles.tdBold}>LKR {total.toFixed(2)}</td>
-                                <td style={styles.td}>
-                                    <button
-                                        style={styles.iconButton}
-                                        onClick={() => editProduct(p)}
-                                    >
-                                        ✏️
-                                    </button>
-                                    <button
-                                        style={styles.iconButton}
-                                        onClick={() => deleteProduct(p._id)}
-                                    >
-                                        🗑️
-                                    </button>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
+                <div style={styles.tableContainer}>
+                    <table style={styles.table}>
+                        <thead>
+                        <tr>
+                            <th style={styles.th}>PRODUCT NAME</th>
+                            <th style={styles.th}>QUANTITY</th>
+                            <th style={styles.th}>PRICE</th>
+                            <th style={styles.th}>TOTAL VALUE</th>
+                            <th style={styles.th}>ACTIONS</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {filteredProducts.map((p, idx) => {
+                            const price = Number(p.price);
+                            const quantity = Number(p.quantity);
+                            const total = price * quantity;
+
+                            return (
+                                <tr key={idx}>
+                                    <td style={styles.td}>{p.name}</td>
+                                    <td style={styles.td}>{quantity}</td>
+                                    <td style={styles.td}>LKR {price.toFixed(2)}</td>
+                                    <td style={styles.tdBold}>LKR {total.toFixed(2)}</td>
+                                    <td style={styles.td}>
+                                        <button style={styles.iconButton} onClick={() => editProduct(p)}>✏️</button>
+                                        <button style={styles.iconButton} onClick={() => deleteProduct(p.id)}>🗑️</button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                        </tbody>
+                    </table>
+                </div>
+
                 <div style={styles.footerRow}>
-                    <span>
-                        Showing {filteredProducts.length} of {products.length} products
-                    </span>
-                    <strong>
-                        Total Inventory Value: LKR {totalInventoryValue.toFixed(2)}
-                    </strong>
+                    <span>Showing {filteredProducts.length} of {products.length} products</span>
+                    <strong>Total Inventory Value: LKR {totalInventoryValue.toFixed(2)}</strong>
                 </div>
             </div>
 
             <footer style={styles.footer}>
                 <span>© 2025 Product Management System</span>
                 <div>
-                    <a href="#" style={styles.footerLink}>Help</a> |{" "}
-                    <a href="#" style={styles.footerLink}>Settings</a>
+                    <a href="#" style={styles.footerLink}>Help</a> | <a href="#" style={styles.footerLink}>Settings</a>
                 </div>
             </footer>
         </div>
@@ -282,11 +297,30 @@ const styles = {
         fontFamily: "Arial, sans-serif",
         backgroundColor: "#f9fafb",
     },
+    headerRow: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: "20px",
+        position: "relative",
+    },
+
     heading: {
         fontSize: "22px",
         fontWeight: "bold",
-        marginBottom: "15px",
     },
+    logoutButton: {
+        position: "absolute",
+        right: 0,
+        backgroundColor: "#ef4444",
+        color: "#fff",
+        padding: "8px 14px",
+        border: "none",
+        borderRadius: "6px",
+        cursor: "pointer",
+        fontWeight: "bold",
+    },
+
     subHeading: {
         fontSize: "16px",
         fontWeight: "bold",
@@ -332,6 +366,13 @@ const styles = {
         alignItems: "center",
         marginBottom: "10px",
     },
+    tableContainer: {
+        maxHeight: "300px",
+        overflowY: "auto",
+        border: "1px solid #e2e8f0",
+        borderRadius: "6px",
+        marginBottom: "10px",
+    },
     table: {
         width: "100%",
         borderCollapse: "collapse",
@@ -343,6 +384,9 @@ const styles = {
         fontSize: "13px",
         color: "#334155",
         fontWeight: "bold",
+        position: "sticky",
+        top: 0,
+        zIndex: 1,
     },
     td: {
         padding: "10px",

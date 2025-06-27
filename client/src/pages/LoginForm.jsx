@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const LoginForm = () => {
     const navigate = useNavigate();
@@ -17,13 +18,37 @@ const LoginForm = () => {
             [e.target.id]: e.target.value,
         }));
     };
+    const validateEmail = (email) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+    };
+
+    const validatePassword = (password) => {
+        const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#^+=])[A-Za-z\d@$!%*?&#^+=]{8,}$/;
+        return regex.test(password);
+    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!validateEmail(formData.email)) {
+            await Swal.fire("Invalid Email", "Please enter a valid email address.", "warning");
+            return;
+        }
+
+        if (!validatePassword(formData.password)) {
+            await Swal.fire(
+                "Weak Password",
+                "Password must be at least 8 characters long and include at least one letter, one number, and one special character.",
+                "warning"
+            );
+            return;
+        }
+
         if (showSignUp) {
             if (formData.password !== formData.confirmPassword) {
-                alert("Passwords do not match.");
+                await Swal.fire("Error", "Passwords do not match.", "error");
                 return;
             }
 
@@ -40,13 +65,13 @@ const LoginForm = () => {
 
                 const data = await res.json();
                 if (res.ok) {
-                    alert("Registration successful.");
+                    await Swal.fire("Success", "Registration successful.", "success");
                     setShowSignUp(false);
                 } else {
-                    alert(data.message || "Registration failed.");
+                    await Swal.fire("Error", data.message || "Registration failed.", "error");
                 }
             } catch (err) {
-                alert("Server error.");
+                await Swal.fire("Server Error", "Please try again later.", "error");
             }
 
         } else {
@@ -62,16 +87,22 @@ const LoginForm = () => {
 
                 const data = await res.json();
                 if (res.ok) {
-                    alert("Login successful");
+                    await Swal.fire({
+                        icon: "success",
+                        title: "Login successful",
+                        showConfirmButton: true,
+                        confirmButtonText: "Continue",
+                    });
                     navigate("/product");
                 } else {
-                    alert(data.message || "Login failed");
+                    await Swal.fire("Error", data.message || "Login failed", "error");
                 }
             } catch (err) {
-                alert("Server error.");
+                await Swal.fire("Server Error", "Please try again later.", "error");
             }
         }
     };
+
 
     const styles = {
         formContainer: {
