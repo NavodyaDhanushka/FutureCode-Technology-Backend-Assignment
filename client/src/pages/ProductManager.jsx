@@ -63,9 +63,9 @@ const ProductManager = () => {
             if (res.ok) {
                 setForm({ name: "", quantity: "", price: "" });
                 fetchProducts();
-                Swal.fire("Product added", "", "success");
+                await Swal.fire("Product added", "", "success");
             } else {
-                Swal.fire("Failed to add product", "", "error");
+                await Swal.fire("Failed to add product", "", "error");
             }
         } catch (err) {
             console.error("Add error:", err);
@@ -89,9 +89,9 @@ const ProductManager = () => {
 
                 if (res.ok) {
                     fetchProducts();
-                    Swal.fire("Deleted!", "", "success");
+                    await Swal.fire("Deleted!", "", "success");
                 } else {
-                    Swal.fire("Failed to delete", "", "error");
+                    await Swal.fire("Failed to delete", "", "error");
                 }
             } catch (err) {
                 console.error("Delete error:", err);
@@ -129,9 +129,9 @@ const ProductManager = () => {
                 });
                 if (res.ok) {
                     fetchProducts();
-                    Swal.fire("Product updated", "", "success");
+                    await Swal.fire("Product updated", "", "success");
                 } else {
-                    Swal.fire("Failed to update", "", "error");
+                    await Swal.fire("Failed to update", "", "error");
                 }
             } catch (err) {
                 console.error("Update error:", err);
@@ -150,7 +150,7 @@ const ProductManager = () => {
 
         if (result.isConfirmed) {
             navigate("/");
-            Swal.fire("Logged out", "", "success");
+            await Swal.fire("Logged out", "", "success");
         }
     };
 
