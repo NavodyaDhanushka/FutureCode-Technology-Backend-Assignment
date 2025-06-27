@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
+    const navigate = useNavigate();
     const [showSignUp, setShowSignUp] = useState(false);
     const [formData, setFormData] = useState({
         username: '',
@@ -9,7 +11,6 @@ const LoginForm = () => {
         confirmPassword: '',
     });
 
-    // Handle input change
     const handleChange = (e) => {
         setFormData((prev) => ({
             ...prev,
@@ -17,12 +18,10 @@ const LoginForm = () => {
         }));
     };
 
-    // Handle form submit
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (showSignUp) {
-            // Signup validation
             if (formData.password !== formData.confirmPassword) {
                 alert("Passwords do not match.");
                 return;
@@ -41,18 +40,16 @@ const LoginForm = () => {
 
                 const data = await res.json();
                 if (res.ok) {
-                    alert("Registration successful. You can now log in.");
+                    alert("Registration successful.");
                     setShowSignUp(false);
                 } else {
                     alert(data.message || "Registration failed.");
                 }
             } catch (err) {
-                console.error("Signup error:", err);
                 alert("Server error.");
             }
 
         } else {
-            // Login
             try {
                 const res = await fetch('http://localhost:5000/api/auth/login', {
                     method: 'POST',
@@ -66,13 +63,11 @@ const LoginForm = () => {
                 const data = await res.json();
                 if (res.ok) {
                     alert("Login successful");
-                    // Store token or navigate user
-                    console.log("Token:", data.token);
+                    navigate("/product");
                 } else {
                     alert(data.message || "Login failed");
                 }
             } catch (err) {
-                console.error("Login error:", err);
                 alert("Server error.");
             }
         }
@@ -132,7 +127,6 @@ const LoginForm = () => {
             borderRadius: '7px',
             outline: 'none',
             border: '1px solid #e5e5e5',
-            transition: 'all 0.3s ease',
         },
         signInBtn: {
             width: '100%',
@@ -165,12 +159,11 @@ const LoginForm = () => {
             <div style={styles.titleContainer}>
                 <p style={styles.title}>{showSignUp ? "Create an Account" : "Login to your Account"}</p>
                 <span style={styles.subtitle}>
-          {showSignUp
-              ? "Sign up to access all features and enjoy the experience."
-              : "Get started with our app, just login or create an account."}
-        </span>
+                    {showSignUp
+                        ? "Sign up to access all features and enjoy the experience."
+                        : "Get started with our app, just login or create an account."}
+                </span>
             </div>
-            <br />
 
             {showSignUp && (
                 <div style={styles.inputContainer}>
