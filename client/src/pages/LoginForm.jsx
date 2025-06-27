@@ -33,12 +33,12 @@ const LoginForm = () => {
         e.preventDefault();
 
         if (!validateEmail(formData.email)) {
-            Swal.fire("Invalid Email", "Please enter a valid email address.", "warning");
+            await Swal.fire("Invalid Email", "Please enter a valid email address.", "warning");
             return;
         }
 
         if (!validatePassword(formData.password)) {
-            Swal.fire(
+            await Swal.fire(
                 "Weak Password",
                 "Password must be at least 8 characters long and include at least one letter, one number, and one special character.",
                 "warning"
@@ -48,7 +48,7 @@ const LoginForm = () => {
 
         if (showSignUp) {
             if (formData.password !== formData.confirmPassword) {
-                Swal.fire("Error", "Passwords do not match.", "error");
+                await Swal.fire("Error", "Passwords do not match.", "error");
                 return;
             }
 
@@ -65,13 +65,13 @@ const LoginForm = () => {
 
                 const data = await res.json();
                 if (res.ok) {
-                    Swal.fire("Success", "Registration successful.", "success");
+                    await Swal.fire("Success", "Registration successful.", "success");
                     setShowSignUp(false);
                 } else {
-                    Swal.fire("Error", data.message || "Registration failed.", "error");
+                    await Swal.fire("Error", data.message || "Registration failed.", "error");
                 }
             } catch (err) {
-                Swal.fire("Server Error", "Please try again later.", "error");
+                await Swal.fire("Server Error", "Please try again later.", "error");
             }
 
         } else {
@@ -95,10 +95,10 @@ const LoginForm = () => {
                     });
                     navigate("/product");
                 } else {
-                    Swal.fire("Error", data.message || "Login failed", "error");
+                    await Swal.fire("Error", data.message || "Login failed", "error");
                 }
             } catch (err) {
-                Swal.fire("Server Error", "Please try again later.", "error");
+                await Swal.fire("Server Error", "Please try again later.", "error");
             }
         }
     };

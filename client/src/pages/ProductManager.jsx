@@ -35,7 +35,6 @@ const ProductManager = () => {
             Swal.fire("Quantity and Price cannot be negative", "", "error");
             return false;
         }
-        // Check for duplicate product name (case-insensitive)
         const duplicate = products.find(
             (p) => p.name.trim().toLowerCase() === form.name.trim().toLowerCase()
         );
@@ -171,7 +170,6 @@ const ProductManager = () => {
                 <button style={styles.logoutButton} onClick={handleLogout}>Logout</button>
             </div>
 
-            {/* Add Product Section */}
             <div style={styles.card}>
                 <h3 style={styles.subHeading}>Add New Product</h3>
                 <div style={styles.inputRow}>
@@ -216,7 +214,6 @@ const ProductManager = () => {
                 </div>
             </div>
 
-            {/* Search Bar */}
             <input
                 type="text"
                 placeholder="Search products..."
@@ -232,7 +229,7 @@ const ProductManager = () => {
                 }}
             />
 
-            {/* Products Table */}
+
             <div style={styles.card}>
                 <div style={styles.tableHeader}>
                     <h3 style={styles.subHeading}>Products List</h3>
@@ -242,7 +239,6 @@ const ProductManager = () => {
                     </p>
                 </div>
 
-                {/* Scrollable container */}
                 <div style={styles.tableContainer}>
                     <table style={styles.table}>
                         <thead>
@@ -306,7 +302,7 @@ const styles = {
         justifyContent: "center",
         alignItems: "center",
         marginBottom: "20px",
-        position: "relative", // needed for absolute logout button
+        position: "relative",
     },
 
     heading: {

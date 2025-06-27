@@ -13,7 +13,6 @@ db.connect((err) => {
     if (err) throw err;
     console.log('MySQL Connected');
 
-    // Create Users table
     const createUsers = `
     CREATE TABLE IF NOT EXISTS users (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -23,7 +22,6 @@ db.connect((err) => {
     );
   `;
 
-    // Create Products table
     const createProducts = `
     CREATE TABLE IF NOT EXISTS products (
       id INT AUTO_INCREMENT PRIMARY KEY,

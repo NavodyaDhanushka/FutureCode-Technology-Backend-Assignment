@@ -1,6 +1,6 @@
 const productModel = require('../models/productModel');
 
-// Create a new product
+
 exports.createProduct = (req, res) => {
     const { name, price, quantity } = req.body;
     if (!name || !price || !quantity) {
@@ -13,7 +13,7 @@ exports.createProduct = (req, res) => {
     });
 };
 
-// Get all products
+
 exports.getAllProducts = (req, res) => {
     productModel.getAllProducts((err, results) => {
         if (err) return res.status(500).json({ message: 'Error fetching products', error: err });
@@ -21,7 +21,6 @@ exports.getAllProducts = (req, res) => {
     });
 };
 
-// Get a product by ID
 exports.getProductById = (req, res) => {
     const id = req.params.id;
     productModel.getProductById(id, (err, results) => {
@@ -31,7 +30,7 @@ exports.getProductById = (req, res) => {
     });
 };
 
-// Update a product
+
 exports.updateProduct = (req, res) => {
     const id = req.params.id;
     const { name, price, quantity } = req.body;
@@ -42,7 +41,6 @@ exports.updateProduct = (req, res) => {
     });
 };
 
-// Delete a product
 exports.deleteProduct = (req, res) => {
     const id = req.params.id;
     productModel.deleteProduct(id, (err) => {
